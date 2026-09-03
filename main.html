@@ -3332,6 +3332,13 @@
         (function() {
             'use strict';
 
+            if (sessionStorage.getItem('codeshalaLoaderCompleted') === 'true') {
+                sessionStorage.removeItem('codeshalaLoaderCompleted');
+            } else {
+                window.location.replace('index.html');
+                return;
+            }
+
             const body = document.body;
 
             // ===== NAVBAR SCROLL =====
