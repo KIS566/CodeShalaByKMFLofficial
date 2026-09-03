@@ -1399,10 +1399,9 @@ body {
 </body>
 
 <script>
-    (function() {
-        setTimeout(function() {
-            window.location.href = 'main.html';
-        }, 8500);
-    })();
+  setTimeout(function() {
+    sessionStorage.setItem('codeshalaLoaderCompleted', 'true');
+    window.location.href = 'main.html';
+  }, 9000);
 </script>
 </html>
