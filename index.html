@@ -1399,9 +1399,16 @@ body {
 </body>
 
 <script>
-  setTimeout(function() {
-    sessionStorage.setItem('codeshalaLoaderCompleted', 'true');
-    window.location.href = 'main.html';
-  }, 10000);
+  const getStartedButton = document.querySelector('.button');
+
+  getStartedButton.addEventListener('click', function() {
+    if (getStartedButton.dataset.started === 'true') return;
+
+    getStartedButton.dataset.started = 'true';
+    setTimeout(function() {
+      sessionStorage.setItem('codeshalaLoaderCompleted', 'true');
+      window.location.href = 'main.html';
+    }, 9000);
+  });
 </script>
 </html>
