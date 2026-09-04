@@ -129,7 +129,7 @@ body.loading::after {
   }
 
   &:hover,
-  &:focus {
+  &.started {
     & .base {
       box-shadow:
         inset 5px -5px 10px 0 #000000cc,
@@ -163,7 +163,7 @@ body.loading::after {
     }
   }
 
-  &:not(:hover, :focus) .filament-glow {
+  &:not(:hover, .started) .filament-glow {
     & path {
       stroke-dashoffset: 0;
     }
@@ -174,7 +174,7 @@ body.loading::after {
     }
   }
 
-  &:focus {
+  &.started {
     & .filament-glow {
       & path {
         animation:
@@ -1414,6 +1414,7 @@ body.loading::after {
     if (getStartedButton.dataset.started === 'true') return;
 
     getStartedButton.dataset.started = 'true';
+    getStartedButton.classList.add('started');
     document.body.classList.add('loading');
     setTimeout(function() {
       sessionStorage.setItem('codeshalaLoaderCompleted', 'true');
