@@ -17,6 +17,15 @@ body {
   overflow: hidden;
 }
 
+body.loading::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  cursor: wait;
+  touch-action: none;
+}
+
 .button-container {
   --filament: #8b451333;
   --filament-grow: #fdfdf9;
@@ -1405,6 +1414,7 @@ body {
     if (getStartedButton.dataset.started === 'true') return;
 
     getStartedButton.dataset.started = 'true';
+    document.body.classList.add('loading');
     setTimeout(function() {
       sessionStorage.setItem('codeshalaLoaderCompleted', 'true');
       window.location.href = 'main.html';
