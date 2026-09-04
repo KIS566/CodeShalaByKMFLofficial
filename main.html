@@ -7,7 +7,7 @@
     <title>CodeShalaByKMFL — Learn. Build. Create.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         :root {
@@ -15,18 +15,19 @@
             --bg-secondary: #111522;
             --bg-card: #151a2a;
             --bg-glass: rgba(255, 255, 255, 0.03);
-            --accent: #ff9f70;
-            --accent-glow: #ff7e40;
-            --accent-soft: rgba(255, 159, 112, 0.15);
-            --accent-border: rgba(255, 159, 112, 0.3);
+            --accent: #ffb86b;
+            --accent-glow: #f28b4b;
+            --accent-soft: rgba(255, 184, 107, 0.12);
+            --accent-border: rgba(255, 184, 107, 0.28);
             --text-primary: #fdfdf9;
             --text-secondary: #c8ccd4;
             --text-muted: #8a8f98;
             --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 159, 112, 0.35);
-            --shadow-glow: 0 0 40px rgba(255, 159, 112, 0.15);
+            --border-hover: rgba(255, 184, 107, 0.35);
+            --shadow-glow: 0 0 40px rgba(255, 184, 107, 0.14);
             --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-display: 'Space Grotesk', 'DM Sans', sans-serif;
             --radius-sm: 8px;
             --radius-md: 16px;
             --radius-lg: 24px;
@@ -100,7 +101,8 @@
         }
         .section-title {
             font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
+            font-family: var(--font-display);
+            font-weight: 600;
             line-height: 1.15;
             letter-spacing: -0.03em;
             margin-bottom: 20px;
@@ -114,12 +116,20 @@
         }
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: blur(5px);
+            transform: translateY(42px) scale(0.98);
+            transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), filter 0.85s ease;
+        }
+        .reveal.from-left:not(.visible) {
+            transform: translateX(-46px) scale(0.98);
+        }
+        .reveal.from-right:not(.visible) {
+            transform: translateX(46px) scale(0.98);
         }
         .reveal.visible {
             opacity: 1;
-            transform: translateY(0);
+            filter: blur(0);
+            transform: translateY(0) scale(1);
         }
         .reveal-delay-1 {
             transition-delay: 0.1s;
@@ -132,6 +142,129 @@
         }
         .reveal-delay-4 {
             transition-delay: 0.4s;
+        }
+
+        /* ===== PROFESSIONAL VISUAL POLISH ===== */
+        body {
+            background:
+                linear-gradient(135deg, rgba(255, 184, 107, 0.035), transparent 32%),
+                var(--bg-primary);
+        }
+        h1,
+        h2,
+        h3,
+        h4,
+        .navbar-brand,
+        .stat-number {
+            font-family: var(--font-display);
+        }
+        .navbar {
+            padding-top: 20px;
+        }
+        .navbar-inner {
+            padding: 10px 14px 10px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 14px;
+            background: rgba(13, 16, 14, 0.52);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+        .navbar.scrolled {
+            padding: 8px 24px;
+            background: rgba(13, 16, 14, 0.78);
+            border-bottom-color: transparent;
+        }
+        .navbar.scrolled .navbar-inner {
+            background: rgba(21, 26, 42, 0.82);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand img,
+        .footer-brand h3 img {
+            border: 1px solid rgba(255, 184, 107, 0.55);
+            box-shadow: 0 0 0 4px rgba(255, 184, 107, 0.08);
+        }
+        .navbar-cta,
+        .btn-enroll {
+            background: var(--accent);
+            box-shadow: 0 8px 20px rgba(255, 184, 107, 0.16);
+        }
+        .hero {
+            background: linear-gradient(180deg, rgba(17, 21, 34, 0.26), transparent 72%);
+        }
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            letter-spacing: -0.055em;
+        }
+        .hero-code-window {
+            border-color: rgba(255, 184, 107, 0.22);
+            background: linear-gradient(145deg, rgba(21, 26, 42, 0.96), rgba(12, 15, 24, 0.94));
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.03), var(--shadow-glow);
+            transform: rotate(1deg);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .hero-code-window:hover {
+            transform: rotate(0) translateY(-6px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.48), var(--shadow-glow);
+        }
+        .what-is-card,
+        .tool-card,
+        .stat-card,
+        .process-step,
+        .course-card,
+        .about-visual {
+            border-radius: 12px;
+            background: linear-gradient(145deg, rgba(21, 26, 42, 0.94), rgba(17, 21, 34, 0.88));
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.16);
+        }
+        .what-is-card:hover,
+        .tool-card:hover,
+        .stat-card:hover,
+        .process-step:hover,
+        .course-card:hover {
+            transform: translateY(-7px);
+            border-color: var(--accent-border);
+        }
+        .tool-card-icon {
+            border: 1px solid rgba(255, 184, 107, 0.18);
+            border-radius: 10px;
+        }
+        .course-card-image {
+            filter: saturate(0.88) contrast(1.06);
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .course-card:hover .course-card-image {
+            filter: saturate(1.08) contrast(1.06);
+            transform: scale(1.035);
+        }
+        .card-main {
+            border-color: rgba(255, 184, 107, 0.26);
+            background: linear-gradient(145deg, #101521, #080a0f);
+        }
+        .cta-final {
+            background: linear-gradient(145deg, #111522 0%, #0d100e 70%);
+        }
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            z-index: 2000;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .scroll-progress span {
+            display: block;
+            width: 0;
+            height: 100%;
+            transform-origin: left center;
+            background: linear-gradient(90deg, #f28b4b, var(--accent), #ffe0a3);
+            box-shadow: 0 0 14px rgba(255, 184, 107, 0.65);
+            transition: width 0.12s linear;
+        }
+        .hero-code-window {
+            will-change: transform;
         }
 
         /* ===== BUTTON STYLES ===== */
@@ -1527,6 +1660,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
+            line-clamp: 3;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
@@ -1546,6 +1680,7 @@
             letter-spacing: 0.02em;
         }
         a.card.zoomed p {
+                    line-clamp: unset;
             -webkit-line-clamp: unset;
         }
         a.card.zoomed .card-inner {
@@ -2666,8 +2801,16 @@
             }
             .reveal {
                 opacity: 1;
+                filter: none;
                 transform: translateY(0);
                 transition: none;
+            }
+            .reveal.from-left,
+            .reveal.from-right {
+                transform: translateY(0) !important;
+            }
+            .hero-code-window {
+                transform: none !important;
             }
             .code-cursor {
                 animation: none;
@@ -2676,6 +2819,8 @@
     </style>
 </head>
 <body>
+
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
 
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar" id="navbar">
@@ -3345,11 +3490,19 @@
             // ===== NAVBAR SCROLL =====
             const navbar = document.getElementById('navbar');
             const backToTop = document.getElementById('backToTop');
+            const scrollProgress = document.getElementById('scrollProgress');
+            const heroCodeWindow = document.querySelector('.hero-code-window');
 
             function handleScroll() {
                 const scrollY = window.scrollY;
+                const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = scrollableHeight > 0 ? (scrollY / scrollableHeight) * 100 : 0;
                 navbar.classList.toggle('scrolled', scrollY > 50);
                 backToTop.classList.toggle('visible', scrollY > 400);
+                scrollProgress.style.width = scrollPercent + '%';
+                if (heroCodeWindow && scrollY < window.innerHeight) {
+                    heroCodeWindow.style.transform = 'rotate(' + (1 - scrollY * 0.0015) + 'deg) translateY(' + (scrollY * 0.08) + 'px)';
+                }
                 const sections = ['home', 'tools', 'courses', 'projects', 'about'];
                 const navLinks = document.querySelectorAll('.navbar-links a');
                 let currentSection = 'home';
@@ -3386,6 +3539,9 @@
 
             // ===== SCROLL REVEAL =====
             const revealElements = document.querySelectorAll('.reveal');
+            revealElements.forEach(function(el, index) {
+                el.classList.add(index % 2 === 0 ? 'from-left' : 'from-right');
+            });
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver(function(entries) {
                     entries.forEach(function(entry) {
