@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Portal — CodeShalaByKMFL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <style>
+        :root {
+            --bg-primary: #0a0d0a;
+            --bg-secondary: #0f1318;
+            --bg-card: #151a24;
+            --bg-elevated: #1e2533;
+            --accent: #ff9f70;
+            --accent-glow: #ff7e40;
+            --accent-soft: rgba(255, 159, 112, 0.12);
+            --accent-border: rgba(255, 159, 112, 0.35);
+            --green: #22c55e;
+            --green-soft: rgba(34, 197, 94, 0.12);
+            --blue: #3b82f6;
+            --purple: #a855f7;
+            --red: #ef4444;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 60px rgba(255, 159, 112, 0.15);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html, body {
+            min-height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-animated::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 159, 112, 0.08) 0%, transparent 65%);
+            border-radius: 50%;
+            animation: float1 15s ease-in-out infinite;
+        }
+        .bg-animated::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.06) 0%, transparent 65%);
+            border-radius: 50%;
+            animation: float2 18s ease-in-out infinite;
+        }
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-40px, 40px) scale(1.1); }
+        }
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.1); }
+        }
+
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 24px;
+            background: rgba(10, 13, 10, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+        }
+        .brand img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-border);
+            box-shadow: 0 0 20px rgba(255, 159, 112, 0.2);
+        }
+        .brand-text span { color: var(--accent); }
+        .brand-text .brand-sub {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            white-space: nowrap;
+            text-decoration: none;
+            font-family: inherit;
+            line-height: 1;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(255, 159, 112, 0.25);
+        }
+        .btn-primary:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 159, 112, 0.4);
+        }
+        .btn-green {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.25);
+        }
+        .btn-green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--accent-border);
+            color: var(--text-primary);
+            background: var(--accent-soft);
+        }
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.78rem;
+        }
+
+        /* Admin Floating Button */
+        .admin-float-btn {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 18px 16px 22px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-radius: 50px 0 0 50px;
+            box-shadow: -4px 8px 30px rgba(255, 159, 112, 0.4);
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            white-space: nowrap;
+        }
+        .admin-float-btn:hover {
+            padding-right: 24px;
+            transform: translateY(-50%) translateX(-4px);
+            box-shadow: -8px 12px 40px rgba(255, 159, 112, 0.6);
+        }
+        .admin-float-btn i { font-size: 1.15rem; }
+        .admin-lock-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #fff;
+            border: 2px solid var(--bg-primary);
+            animation: pulseBadge 2s ease-in-out infinite;
+        }
+        @keyframes pulseBadge {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: var(--accent-soft);
+            border: 1px solid var(--accent-border);
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .hero-badge i { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 18px;
+        }
+        .hero-title .gradient {
+            background: linear-gradient(135deg, var(--accent), #ff6b3d, var(--purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        /* Live Alert */
+        .live-alert {
+            display: none;
+            margin: 0 auto 30px;
+            max-width: 700px;
+            padding: 20px 26px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(244, 63, 94, 0.08));
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            border-radius: var(--radius-md);
+            align-items: center;
+            gap: 16px;
+            animation: livePulse 2s infinite;
+        }
+        .live-alert.show { display: flex; }
+        @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+        }
+        .live-alert-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            animation: pulse 1.5s infinite;
+        }
+        .live-alert-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .live-alert-content h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fca5a5;
+        }
+        .live-alert-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 50px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.35s;
+        }
+        .stat-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-border);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+        .stat-item i {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .stat-item .num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .stat-item .lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-header h2 i {
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+        .count-pill {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 50px;
+            border: 1px solid var(--accent-border);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            width: fit-content;
+        }
+        .filter-btn {
+            padding: 9px 20px;
+            border-radius: 50px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.25s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .filter-btn:hover { color: var(--text-primary); }
+        .filter-btn.active {
+            background: var(--accent);
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(255, 159, 112, 0.3);
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 22px;
+        }
+        .class-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .class-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent);
+            transition: all 0.3s;
+        }
+        .class-card.status-upcoming::before { background: linear-gradient(90deg, var(--accent), #fbbf24); }
+        .class-card.status-live::before { 
+            background: linear-gradient(90deg, var(--red), #f43f5e); 
+            animation: liveGlow 1.5s infinite;
+        }
+        .class-card.status-completed::before { background: linear-gradient(90deg, var(--green), #34d399); }
+        @keyframes liveGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.9); }
+        }
+        .class-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+        .class-card.status-completed { opacity: 0.75; }
+        .class-card.status-completed:hover { opacity: 1; }
+
+        .class-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .class-title-area {
+            flex: 1;
+            min-width: 0;
+        }
+        .class-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+        .class-subject-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 11px;
+            border-radius: 50px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            border: 1px solid var(--accent-border);
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 6px 11px;
+            border-radius: 50px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .status-badge.upcoming {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+        .status-badge.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            animation: pulseLive 1.2s infinite;
+        }
+        .status-badge.live::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            animation: pulseDot 1.2s infinite;
+        }
+        @keyframes pulseLive {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+        .status-badge.completed {
+            background: var(--green-soft);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .class-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 0.83rem;
+            color: var(--text-secondary);
+            min-width: 0;
+        }
+        .info-item i {
+            color: var(--accent);
+            font-size: 0.88rem;
+            width: 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .info-item span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .class-topic {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 159, 112, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+        }
+        .class-topic strong { color: var(--accent); }
+
+        .class-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        .class-actions .btn {
+            flex: 1;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+        }
+        .btn-join {
+            background: linear-gradient(135deg, var(--green), #16a34a);
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+        }
+        .btn-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
+        }
+        .btn-join:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-join:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+        }
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .empty-state h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            max-width: 400px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 80px;
+            padding: 40px 24px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .footer span { color: var(--accent); font-weight: 600; }
+        .footer .footer-love {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .footer .footer-love i {
+            color: var(--red);
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 14px 22px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
+            max-width: 380px;
+            border-left: 4px solid var(--accent);
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast i {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 12px 16px; }
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .brand { justify-content: center; }
+            .header-actions { justify-content: center; }
+            .main-content { padding: 24px 14px 120px; }
+            .hero-title { font-size: 1.9rem; }
+            .hero-subtitle { font-size: 0.95rem; }
+            .stats-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-item { padding: 16px 12px; }
+            .stat-item .num { font-size: 1.5rem; }
+            .classes-grid { grid-template-columns: 1fr; }
+            .filter-bar {
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+            .filter-btn { flex-shrink: 0; padding: 8px 14px; font-size: 0.75rem; }
+            .live-alert { flex-direction: column; text-align: center; }
+            .live-alert .btn { width: 100%; }
+            .toast-container { bottom: 90px; right: 16px; left: 16px; }
+            .toast { max-width: none; }
+            .admin-float-btn {
+                top: auto;
+                bottom: 20px;
+                right: 16px;
+                left: 16px;
+                transform: none;
+                border-radius: 50px;
+                padding: 14px 20px;
+                justify-content: center;
+                font-size: 0.85rem;
+            }
+            .admin-float-btn:hover {
+                transform: translateY(-3px);
+                padding-right: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .class-info-grid { grid-template-columns: 1fr; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated"></div>
+
+    <a href="admin.html" class="admin-float-btn" aria-label="Admin Panel">
+        <div class="admin-lock-badge"><i class="fas fa-lock"></i></div>
+        <i class="fas fa-shield-alt"></i>
+        <span>Admin Panel</span>
+    </a>
+
+    <header class="header">
+        <div class="header-inner">
+            <div class="brand">
+                <img src="https://raw.githubusercontent.com/KIS566/CodeShala-Test/main/9481c568-c70f-4573-b0ac-d5203f5fbf44.jpg" alt="CodeShala" />
+                <div class="brand-text">
+                    CodeShala<span>ByKMFL</span>
+                    <span class="brand-sub">
+                        <i class="fas fa-graduation-cap"></i> Student Portal
+                    </span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="main.html" class="btn btn-ghost btn-sm">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <button class="btn btn-outline btn-sm" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <section class="hero-section">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i>
+                Live Classes Portal
+            </div>
+            <h1 class="hero-title">
+                Welcome to your <br>
+                <span class="gradient">Class Dashboard 🎓</span>
+            </h1>
+            <p class="hero-subtitle">
+                यहाँ आपको सभी Upcoming, Live और Completed Classes मिलेंगी। 
+                Join करने के लिए सिर्फ "Join Now" पर Click करें!
+            </p>
+            <div class="hero-actions">
+                <a href="#classes" class="btn btn-primary">
+                    <i class="fas fa-calendar-check"></i> View All Classes
+                </a>
+                <a href="https://wa.me/919315582405?text=👋%20नमस्ते!%20मुझे%20classes%20के%20बारे%20में%20जानना%20है।" 
+                   target="_blank" class="btn btn-green">
+                    <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                </a>
+            </div>
+        </section>
+
+        <div class="live-alert" id="liveAlert">
+            <div class="live-alert-icon">
+                <i class="fas fa-broadcast-tower"></i>
+            </div>
+            <div class="live-alert-content">
+                <h4>🔴 LIVE NOW: <span id="liveClassTitle">Class Name</span></h4>
+                <p>Join immediately before it ends!</p>
+            </div>
+            <a href="#" target="_blank" class="btn btn-primary" id="liveJoinBtn">
+                <i class="fas fa-play"></i> Join Live
+            </a>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <i class="fas fa-calendar-check"></i>
+                <div class="num" id="statTotal">0</div>
+                <div class="lbl">Total Classes</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-clock"></i>
+                <div class="num" id="statUpcoming">0</div>
+                <div class="lbl">Upcoming</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-check-circle"></i>
+                <div class="num" id="statCompleted">0</div>
+                <div class="lbl">Completed</div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-bolt"></i>
+                <div class="num" id="statLive">0</div>
+                <div class="lbl">Live Now</div>
+            </div>
+        </div>
+
+        <div class="section-header" id="classes">
+            <h2>
+                <i class="fas fa-th-large"></i> All Classes
+                <span class="count-pill" id="classCount">0</span>
+            </h2>
+        </div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">
+                <i class="fas fa-th"></i> All
+            </button>
+            <button class="filter-btn" data-filter="live">
+                <i class="fas fa-broadcast-tower"></i> Live
+            </button>
+            <button class="filter-btn" data-filter="upcoming">
+                <i class="fas fa-clock"></i> Upcoming
+            </button>
+            <button class="filter-btn" data-filter="completed">
+                <i class="fas fa-check"></i> Completed
+            </button>
+        </div>
+
+        <div class="classes-grid" id="classesGrid"></div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-love">
+            Made with <i class="fas fa-heart"></i> by 
+            <span>CodeShalaByKMFL</span> © 2026
+        </div>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===================================================
+            // ⚠️ YOUR API URL IS HERE
+            // ===================================================
+            const API_URL = 'https://script.google.com/macros/s/AKfycbzE8u_Ff20NUih_uC2irGOO8VGVzfZhHLEZRJXSUidaX7ezPq8ZE-v-B47nZ1-fyCHx4A/exec';
+            const ADMIN_WHATSAPP = '919315582405';
+
+            let classes = [];
+            let currentFilter = 'all';
+            let refreshInterval = null;
+
+            async function fetchClasses(silent = false) {
+                try {
+                    const response = await fetch(API_URL + '?t=' + Date.now());
+                    const data = await response.json();
+
+                    if (data.error) {
+                        console.error('API Error:', data.error);
+                        return;
+                    }
+
+                    const newClasses = data.classes || [];
+                    const hasChanged = JSON.stringify(newClasses) !== JSON.stringify(classes);
+                    
+                    if (hasChanged || classes.length === 0) {
+                        classes = newClasses;
+                        renderClasses();
+                        updateStats();
+                        checkLiveClass();
+
+                        if (!silent && classes.length > 0 && hasChanged) {
+                            showToast('📢 Classes updated!', 'success');
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    if (!silent) showToast('❌ Failed to load classes', 'error');
+                }
+            }
+
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr + 'T00:00:00');
+                    const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+                    return date.toLocaleDateString('en-IN', options);
+                } catch (e) { return dateStr; }
+            }
+
+            function formatTime(timeStr) {
+                if (!timeStr) return '';
+                try {
+                    const [hours, minutes] = timeStr.split(':');
+                    const h = parseInt(hours);
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    const h12 = h % 12 || 12;
+                    return `${h12}:${minutes} ${ampm}`;
+                } catch (e) { return timeStr; }
+            }
+
+            function getRelativeTime(cls) {
+                if (!cls.date || !cls.time) return '';
+                try {
+                    const classTime = new Date(`${cls.date}T${cls.time}`);
+                    const now = new Date();
+                    const diff = classTime - now;
+                    const hours = Math.floor(Math.abs(diff) / (1000 * 60 * 60));
+                    const minutes = Math.floor((Math.abs(diff) % (1000 * 60 * 60)) / (1000 * 60));
+                    const days = Math.floor(hours / 24);
+
+                    if (diff < 0) {
+                        if (hours < 1) return `Started ${minutes} min ago`;
+                        if (hours < 24) return `${hours}h ago`;
+                        return `${days}d ago`;
+                    } else {
+                        if (hours < 1) return `In ${minutes} minutes`;
+                        if (hours < 24) return `In ${hours} hours`;
+                        return `In ${days} days`;
+                    }
+                } catch (e) { return ''; }
+            }
+
+            function getClassStatus(cls) {
+                if (!cls.date || !cls.time) return 'upcoming';
+                try {
+                    const classDateTime = new Date(`${cls.date}T${cls.time}`);
+                    const now = new Date();
+                    const diffHours = (classDateTime - now) / (1000 * 60 * 60);
+
+                    if (diffHours < -1) return 'completed';
+                    if (diffHours >= -1 && diffHours <= 1) return 'live';
+                    return 'upcoming';
+                } catch (e) { return 'upcoming'; }
+            }
+
+            function getStatusBadgeHTML(status) {
+                const badges = {
+                    'upcoming': '<span class="status-badge upcoming"><i class="fas fa-clock"></i> Upcoming</span>',
+                    'live': '<span class="status-badge live">LIVE NOW</span>',
+                    'completed': '<span class="status-badge completed"><i class="fas fa-check"></i> Completed</span>'
+                };
+                return badges[status] || badges.upcoming;
+            }
+
+            function renderClasses() {
+                const grid = document.getElementById('classesGrid');
+                if (!grid) return;
+
+                let filtered = classes;
+                if (currentFilter === 'upcoming') {
+                    filtered = classes.filter(c => getClassStatus(c) === 'upcoming');
+                } else if (currentFilter === 'live') {
+                    filtered = classes.filter(c => getClassStatus(c) === 'live');
+                } else if (currentFilter === 'completed') {
+                    filtered = classes.filter(c => getClassStatus(c) === 'completed');
+                }
+
+                filtered.sort((a, b) => {
+                    const statusA = getClassStatus(a);
+                    const statusB = getClassStatus(b);
+                    const priority = { live: 0, upcoming: 1, completed: 2 };
+                    if (priority[statusA] !== priority[statusB]) {
+                        return priority[statusA] - priority[statusB];
+                    }
+                    const dateA = new Date(`${a.date}T${a.time}`);
+                    const dateB = new Date(`${b.date}T${b.time}`);
+                    return statusA === 'completed' ? dateB - dateA : dateA - dateB;
+                });
+
+                document.getElementById('classCount').textContent = filtered.length;
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                            <h3>No Classes Available</h3>
+                            <p>${currentFilter === 'all' 
+                                ? 'अभी तक कोई class add नहीं हुई है। जल्द ही आएगी!' 
+                                : `No ${currentFilter} classes right now.`}</p>
+                            <a href="https://wa.me/${ADMIN_WHATSAPP}?text=👋%20नमस्ते!%20मुझे%20classes%20के%20बारे%20में%20जानना%20है।" 
+                               target="_blank" class="btn btn-green">
+                                <i class="fab fa-whatsapp"></i> Ask About Classes
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = filtered.map(cls => {
+                    const status = getClassStatus(cls);
+                    const statusBadge = getStatusBadgeHTML(status);
+                    const statusClass = `status-${status}`;
+                    const canJoin = status === 'live' || status === 'upcoming';
+
+                    return `
+                        <div class="class-card ${statusClass}">
+                            <div class="class-header">
+                                <div class="class-title-area">
+                                    <div class="class-title">${escapeHtml(cls.title)}</div>
+                                    <span class="class-subject-chip">
+                                        <i class="fas fa-tag"></i> ${escapeHtml(cls.subject)}
+                                    </span>
+                                </div>
+                                ${statusBadge}
+                            </div>
+
+                            <div class="class-info-grid">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${formatDate(cls.date)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${formatTime(cls.time)}${cls.duration ? ' • ' + escapeHtml(cls.duration) : ''}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-video"></i>
+                                    <span>${escapeHtml(cls.platform)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    <span>${getRelativeTime(cls)}</span>
+                                </div>
+                            </div>
+
+                            ${cls.topic ? `<div class="class-topic"><strong>📝 Topic:</strong> ${escapeHtml(cls.topic)}</div>` : ''}
+
+                            <div class="class-actions">
+                                ${canJoin ? `
+                                    <a href="${escapeHtml(cls.link)}" target="_blank" class="btn btn-join">
+                                        <i class="fas fa-${status === 'live' ? 'broadcast-tower' : 'sign-in-alt'}"></i>
+                                        ${status === 'live' ? 'Join Live Now' : 'Join Class'}
+                                    </a>
+                                ` : `
+                                    <button class="btn btn-join" disabled>
+                                        <i class="fas fa-check-circle"></i> Class Completed
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            function updateStats() {
+                const total = classes.length;
+                const completed = classes.filter(c => getClassStatus(c) === 'completed').length;
+                const upcoming = classes.filter(c => getClassStatus(c) === 'upcoming').length;
+                const live = classes.filter(c => getClassStatus(c) === 'live').length;
+
+                animateValue('statTotal', total);
+                animateValue('statCompleted', completed);
+                animateValue('statUpcoming', upcoming);
+                animateValue('statLive', live);
+            }
+
+            function animateValue(id, target) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const current = parseInt(el.textContent) || 0;
+                if (current === target) return;
+
+                const diff = target - current;
+                const steps = 20;
+                const step = diff / steps;
+                let i = 0;
+
+                const timer = setInterval(() => {
+                    i++;
+                    el.textContent = Math.round(current + step * i);
+                    if (i >= steps) {
+                        el.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, 25);
+            }
+
+            function checkLiveClass() {
+                const liveClasses = classes.filter(c => getClassStatus(c) === 'live');
+                const alertEl = document.getElementById('liveAlert');
+                if (!alertEl) return;
+
+                if (liveClasses.length > 0) {
+                    const liveClass = liveClasses[0];
+                    document.getElementById('liveClassTitle').textContent = liveClass.title;
+                    document.getElementById('liveJoinBtn').href = liveClass.link;
+                    alertEl.classList.add('show');
+                } else {
+                    alertEl.classList.remove('show');
+                }
+            }
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderClasses();
+                });
+            });
+
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    icon.style.transition = 'transform 0.5s';
+                    icon.style.transform = 'rotate(360deg)';
+                    
+                    fetchClasses();
+                    showToast('🔄 Refreshing...', 'info');
+                    
+                    setTimeout(() => {
+                        icon.style.transform = 'rotate(0deg)';
+                    }, 500);
+                });
+            }
+
+            window.showToast = function(msg, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+                
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+
+                let icon = 'fa-info-circle';
+                if (type === 'success') icon = 'fa-check-circle';
+
+                toast.innerHTML = `<i class="fas ${icon}"></i><span>${msg}</span>`;
+
+                container.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 400);
+                }, 3500);
+            };
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function startAutoRefresh() {
+                if (refreshInterval) clearInterval(refreshInterval);
+                refreshInterval = setInterval(() => {
+                    fetchClasses(true);
+                }, 30000);
+            }
+
+            function init() {
+                const grid = document.getElementById('classesGrid');
+                if (grid) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                            <h3>Loading Classes...</h3>
+                            <p>कृपया प्रतीक्षा करें, classes load हो रही हैं।</p>
+                        </div>
+                    `;
+                }
+
+                fetchClasses(true);
+                startAutoRefresh();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+        })();
+    </script>
+</body>
+</html>

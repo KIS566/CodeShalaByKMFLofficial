@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel — CodeShalaByKMFL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <style>
+        :root {
+            --bg-primary: #0a0d0a;
+            --bg-secondary: #0f1318;
+            --bg-card: #151a24;
+            --bg-card-hover: #1a2130;
+            --bg-elevated: #1e2533;
+            --accent: #ff9f70;
+            --accent-glow: #ff7e40;
+            --accent-soft: rgba(255, 159, 112, 0.12);
+            --accent-border: rgba(255, 159, 112, 0.35);
+            --green: #22c55e;
+            --green-soft: rgba(34, 197, 94, 0.12);
+            --blue: #3b82f6;
+            --purple: #a855f7;
+            --red: #ef4444;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 60px rgba(255, 159, 112, 0.15);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html, body {
+            min-height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bg-animated::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 159, 112, 0.08) 0%, transparent 65%);
+            border-radius: 50%;
+            animation: float1 15s ease-in-out infinite;
+        }
+        .bg-animated::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.06) 0%, transparent 65%);
+            border-radius: 50%;
+            animation: float2 18s ease-in-out infinite;
+        }
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-40px, 40px) scale(1.1); }
+        }
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.1); }
+        }
+
+        /* ===============================================================
+           LOGIN SCREEN
+           =============================================================== */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: var(--bg-primary);
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .login-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .login-card {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 48px 36px 36px;
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            animation: loginIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+        @keyframes loginIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            border-radius: 0 0 4px 4px;
+        }
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            border-radius: 50%;
+            font-size: 2.2rem;
+            color: #fff;
+            box-shadow: 0 12px 40px rgba(255, 159, 112, 0.3);
+            animation: pulseLock 2s ease-in-out infinite;
+        }
+        @keyframes pulseLock {
+            0%, 100% { transform: scale(1); box-shadow: 0 12px 40px rgba(255, 159, 112, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 16px 50px rgba(255, 159, 112, 0.5); }
+        }
+        .login-title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.02em;
+        }
+        .login-title span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-subtitle {
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+        .password-input-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .password-input-wrap input {
+            width: 100%;
+            padding: 16px 50px 16px 50px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s;
+            outline: none;
+            letter-spacing: 0.05em;
+        }
+        .password-input-wrap input:focus {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            box-shadow: 0 0 0 6px rgba(255, 159, 112, 0.1);
+        }
+        .password-input-wrap .lock-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        .password-input-wrap input:focus ~ .lock-icon {
+            color: var(--accent);
+        }
+        .password-input-wrap .toggle-eye {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        .password-input-wrap .toggle-eye:hover {
+            color: var(--accent);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 24px rgba(255, 159, 112, 0.3);
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 159, 112, 0.45);
+        }
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        .login-error {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            color: #fca5a5;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .login-error.show {
+            display: flex;
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .login-footer i {
+            color: var(--green);
+        }
+
+        /* ===============================================================
+           ADMIN PANEL
+           =============================================================== */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+        .admin-panel.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ===== TOP BAR ===== */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 14px 24px;
+            background: rgba(10, 13, 10, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+        .topbar-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+        }
+        .topbar-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-border);
+            box-shadow: 0 0 20px rgba(255, 159, 112, 0.2);
+        }
+        .topbar-brand .brand-text span {
+            color: var(--accent);
+        }
+        .topbar-brand .brand-badge {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            white-space: nowrap;
+            text-decoration: none;
+            font-family: inherit;
+            line-height: 1;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(255, 159, 112, 0.2);
+        }
+        .btn-primary:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 159, 112, 0.4);
+        }
+        .btn-green {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.2);
+        }
+        .btn-green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--accent-border);
+            color: var(--text-primary);
+            background: var(--accent-soft);
+        }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.78rem;
+        }
+        .btn-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 80px;
+        }
+
+        /* ===== WELCOME BANNER ===== */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 159, 112, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .welcome-banner::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .welcome-text h1 {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+        .welcome-text h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .welcome-text p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            max-width: 550px;
+        }
+        .welcome-emoji {
+            font-size: 4rem;
+            animation: wave 2.5s ease-in-out infinite;
+            transform-origin: 70% 70%;
+        }
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(-4deg); }
+            50% { transform: rotate(10deg); }
+            60% { transform: rotate(0deg); }
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .stat-card:hover::before { opacity: 1; }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        .stat-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .stat-icon-wrap.orange {
+            background: linear-gradient(135deg, rgba(255, 159, 112, 0.2), rgba(255, 159, 112, 0.05));
+            color: var(--accent);
+            box-shadow: 0 4px 20px rgba(255, 159, 112, 0.15);
+        }
+        .stat-icon-wrap.green {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.05));
+            color: var(--green);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
+        }
+        .stat-icon-wrap.blue {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+            color: var(--blue);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        }
+        .stat-icon-wrap.purple {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(168, 85, 247, 0.05));
+            color: var(--purple);
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
+        }
+        .stat-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .stat-value {
+            font-size: 1.9rem;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 6px;
+            letter-spacing: 0.02em;
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-header h2 i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        .section-header .count-badge {
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 50px;
+            margin-left: 8px;
+        }
+
+        /* ===== FORM CARD ===== */
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            margin-bottom: 36px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent), transparent);
+        }
+        .form-card:hover {
+            border-color: var(--accent-border);
+        }
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding-left: 6px;
+        }
+        .form-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .form-header-text h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        .form-header-text p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-left: 2px;
+        }
+        .form-group label i {
+            color: var(--accent);
+            font-size: 0.78rem;
+            width: 14px;
+        }
+        .form-group label .required {
+            color: var(--red);
+            font-size: 0.9rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+            font-size: 0.92rem;
+            font-family: inherit;
+            transition: all 0.25s;
+            outline: none;
+            width: 100%;
+            font-weight: 500;
+        }
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            box-shadow: 0 0 0 4px rgba(255, 159, 112, 0.1);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9f70' stroke-width='2.5'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px;
+            padding-right: 42px;
+        }
+        .form-group select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        /* ===== FILTERS ===== */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            width: fit-content;
+        }
+        .filter-btn {
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.25s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-btn:hover {
+            color: var(--text-primary);
+        }
+        .filter-btn.active {
+            background: var(--accent);
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(255, 159, 112, 0.3);
+        }
+
+        /* ===== CLASS CARDS ===== */
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .class-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .class-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent);
+            transition: all 0.3s;
+        }
+        .class-card.status-upcoming::before { background: linear-gradient(90deg, var(--accent), #fbbf24); }
+        .class-card.status-live::before { background: linear-gradient(90deg, var(--red), #f43f5e); animation: liveGlow 1.5s infinite; }
+        .class-card.status-completed::before { background: linear-gradient(90deg, var(--green), #34d399); }
+        @keyframes liveGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+            50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.9); }
+        }
+        .class-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .class-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .class-title-area {
+            flex: 1;
+            min-width: 0;
+        }
+        .class-title {
+            font-size: 1.08rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        .class-subject-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 50px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 5px 10px;
+            border-radius: 50px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .status-badge.upcoming {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+        .status-badge.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            animation: pulseLive 1.2s infinite;
+        }
+        .status-badge.live::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            animation: pulseDot 1.2s infinite;
+        }
+        @keyframes pulseLive {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+        .status-badge.completed {
+            background: var(--green-soft);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .class-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.025);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            min-width: 0;
+        }
+        .info-item i {
+            color: var(--accent);
+            font-size: 0.85rem;
+            width: 14px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .info-item span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .class-topic {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            background: rgba(255, 159, 112, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        .class-link {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 10px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+        }
+        .class-link i {
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .class-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: auto;
+        }
+        .class-actions .btn {
+            padding: 9px 12px;
+            font-size: 0.78rem;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+        }
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .empty-state h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: var(--shadow-card);
+            animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin: auto;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .modal-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--green-soft);
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .modal-box h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .modal-box > p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .modal-box textarea {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: rgba(0, 0, 0, 0.35);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.65;
+            resize: vertical;
+            min-height: 240px;
+            outline: none;
+            margin-bottom: 18px;
+            transition: border-color 0.3s;
+        }
+        .modal-box textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+        }
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 14px 22px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
+            max-width: 380px;
+            border-left: 4px solid var(--accent);
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success { border-left-color: var(--green); }
+        .toast.success i { color: var(--green); }
+        .toast.error { border-left-color: var(--red); }
+        .toast.error i { color: var(--red); }
+        .toast.info { border-left-color: var(--blue); }
+        .toast.info i { color: var(--blue); }
+        .toast i {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            color: var(--accent);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .topbar { padding: 12px 16px; }
+            .topbar-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .topbar-brand { justify-content: center; }
+            .topbar-actions { justify-content: center; }
+            .main-content { padding: 20px 14px 60px; }
+            .welcome-banner { padding: 24px 20px; }
+            .welcome-emoji { font-size: 3rem; }
+            .form-card { padding: 22px 18px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .classes-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-card { padding: 16px; gap: 12px; }
+            .stat-icon-wrap { width: 46px; height: 46px; font-size: 1.2rem; }
+            .stat-value { font-size: 1.4rem; }
+            .class-actions { grid-template-columns: 1fr 1fr; }
+            .toast-container { bottom: 16px; right: 16px; left: 16px; }
+            .toast { max-width: none; }
+            .modal-actions { grid-template-columns: 1fr; }
+            .login-card { padding: 36px 24px 28px; }
+            .login-logo { width: 68px; height: 68px; font-size: 1.8rem; }
+            .login-title { font-size: 1.4rem; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .filter-bar { width: 100%; }
+            .filter-btn { flex: 1; justify-content: center; padding: 8px 12px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ANIMATED BACKGROUND ===== -->
+    <div class="bg-animated"></div>
+
+    <!-- ===============================================================
+         LOGIN SCREEN
+         =============================================================== -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h1 class="login-title">CodeShala<span>Admin</span></h1>
+            <p class="login-subtitle">🔐 Enter password to access admin panel</p>
+            
+            <form id="loginForm">
+                <div class="password-input-wrap">
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        placeholder="Enter password..." 
+                        autocomplete="current-password"
+                        required 
+                    />
+                    <i class="fas fa-lock lock-icon"></i>
+                    <button type="button" class="toggle-eye" id="toggleEye" aria-label="Toggle password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <i class="fas fa-unlock"></i>
+                    <span>Unlock Admin Panel</span>
+                </button>
+                <div class="login-error" id="loginError">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>❌ Wrong Password! Try again.</span>
+                </div>
+            </form>
+
+            <div class="login-footer">
+                <i class="fas fa-shield-alt"></i> Secure Admin Access
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================================
+         ADMIN PANEL
+         =============================================================== -->
+    <div class="admin-panel" id="adminPanel">
+
+        <!-- ===== TOP BAR ===== -->
+        <header class="topbar">
+            <div class="topbar-inner">
+                <div class="topbar-brand">
+                    <img src="https://raw.githubusercontent.com/KIS566/CodeShala-Test/main/9481c568-c70f-4573-b0ac-d5203f5fbf44.jpg" alt="CodeShala" />
+                    <div class="brand-text">
+                        CodeShala<span>ByKMFL</span>
+                        <span class="brand-badge">
+                            <i class="fas fa-shield-alt"></i> Admin Panel
+                        </span>
+                    </div>
+                </div>
+                <div class="topbar-actions">
+                    <a href="main.html" class="btn btn-ghost btn-sm">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="portal.html" class="btn btn-outline btn-sm">
+                        <i class="fas fa-graduation-cap"></i> Portal
+                    </a>
+                    <button class="btn btn-outline btn-sm" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <button class="btn btn-green btn-sm" id="broadcastAllBtn">
+                        <i class="fab fa-whatsapp"></i> Broadcast All
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+
+            <!-- ===== WELCOME BANNER ===== -->
+            <div class="welcome-banner">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h1>Radhe Radhe, <span>Admin Ji!</span> 🙏</h1>
+                        <p>Welcome to your Class Manager Panel. Yahan se aap apni classes add karke students ko WhatsApp par bhej sakte hain.</p>
+                    </div>
+                    <div class="welcome-emoji">🙏</div>
+                </div>
+            </div>
+
+            <!-- ===== STATS ===== -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon-wrap orange"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statTotal">0</div>
+                        <div class="stat-label">Total Classes</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon-wrap green"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statCompleted">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon-wrap blue"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statUpcoming">0</div>
+                        <div class="stat-label">Upcoming</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon-wrap purple"><i class="fas fa-bolt"></i></div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statLive">0</div>
+                        <div class="stat-label">Live Now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ADD CLASS SECTION ===== -->
+            <div class="section-header">
+                <h2><i class="fas fa-plus-circle"></i> Add New Class</h2>
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <div class="form-header-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="form-header-text">
+                        <h3>Create a New Class</h3>
+                        <p>Fill in the details below and save to add a class to Google Sheets</p>
+                    </div>
+                </div>
+
+                <form id="classForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-heading"></i> Class Title <span class="required">*</span></label>
+                            <input type="text" id="classTitle" placeholder="e.g., HTML Basics - Day 1" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-book"></i> Subject <span class="required">*</span></label>
+                            <select id="classSubject" required>
+                                <option value="">-- Select Subject --</option>
+                                <option value="HTML">🌐 HTML</option>
+                                <option value="CSS">🎨 CSS</option>
+                                <option value="JavaScript">⚡ JavaScript</option>
+                                <option value="Python">🐍 Python</option>
+                                <option value="Web Development">💻 Web Development</option>
+                                <option value="DSA">🧩 DSA</option>
+                                <option value="Other">📚 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> Date <span class="required">*</span></label>
+                            <input type="date" id="classDate" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Time <span class="required">*</span></label>
+                            <input type="time" id="classTime" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-hourglass-half"></i> Duration</label>
+                            <input type="text" id="classDuration" placeholder="e.g., 1 hour, 45 min" />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-video"></i> Platform <span class="required">*</span></label>
+                            <select id="classPlatform" required>
+                                <option value="Google Meet">📹 Google Meet</option>
+                                <option value="Zoom">🎥 Zoom</option>
+                                <option value="YouTube Live">▶️ YouTube Live</option>
+                                <option value="Microsoft Teams">💼 Microsoft Teams</option>
+                                <option value="Other">🔗 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group full">
+                            <label><i class="fas fa-link"></i> Class Link <span class="required">*</span></label>
+                            <input type="url" id="classLink" placeholder="https://meet.google.com/abc-defg-hij" required />
+                        </div>
+                        <div class="form-group full">
+                            <label><i class="fas fa-align-left"></i> Topic / Description</label>
+                            <textarea id="classTopic" placeholder="What will you teach in this class? (Optional)" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Class
+                        </button>
+                        <button type="button" class="btn btn-outline" id="clearFormBtn">
+                            <i class="fas fa-eraser"></i> Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ===== CLASSES LIST ===== -->
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-list-ul"></i> Your Classes
+                    <span class="count-badge" id="classCount">0</span>
+                </h2>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th"></i> All
+                </button>
+                <button class="filter-btn" data-filter="upcoming">
+                    <i class="fas fa-clock"></i> Upcoming
+                </button>
+                <button class="filter-btn" data-filter="live">
+                    <i class="fas fa-broadcast-tower"></i> Live
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <i class="fas fa-check"></i> Completed
+                </button>
+            </div>
+
+            <div class="classes-grid" id="classesGrid"></div>
+
+        </main>
+    </div>
+
+    <!-- ===============================================================
+         BROADCAST MODAL
+         =============================================================== -->
+    <div class="modal-overlay" id="broadcastModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-header-icon"><i class="fab fa-whatsapp"></i></div>
+                <div>
+                    <h3>Broadcast Message</h3>
+                    <p style="color: var(--text-muted); font-size: 0.82rem;">All upcoming classes in one message</p>
+                </div>
+            </div>
+            <p>यह मैसेज आपके सभी Students को भेजा जा सकता है। नीचे Preview देखें:</p>
+            <textarea id="broadcastMessage" readonly></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="modalCancelBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <a href="#" class="btn btn-green" id="modalSendBtn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Send on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===================================================================
+            // ⚠️ CONFIGURATION
+            // ===================================================================
+            const API_URL = 'https://script.google.com/macros/s/AKfycbzE8u_Ff20NUih_uC2irGOO8VGVzfZhHLEZRJXSUidaX7ezPq8ZE-v-B47nZ1-fyCHx4A/exec';
+            const ADMIN_PASSWORD = 'Radhe Radhe';
+            const ADMIN_WHATSAPP = '919315582405';
+            const AUTH_KEY = 'codeshala_admin_auth';
+
+            // ===================================================================
+            // STATE
+            // ===================================================================
+            let classes = [];
+            let currentFilter = 'all';
+            let refreshInterval = null;
+
+            // ===================================================================
+            // LOGIN SYSTEM
+            // ===================================================================
+            const loginScreen = document.getElementById('loginScreen');
+            const loginForm = document.getElementById('loginForm');
+            const passwordInput = document.getElementById('passwordInput');
+            const loginError = document.getElementById('loginError');
+            const toggleEye = document.getElementById('toggleEye');
+            const loginBtn = document.getElementById('loginBtn');
+            const adminPanel = document.getElementById('adminPanel');
+
+            // Check if already authenticated
+            if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+                showAdminPanel();
+            }
+
+            // Toggle password visibility
+            if (toggleEye) {
+                toggleEye.addEventListener('click', function() {
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+                    this.innerHTML = type === 'password' 
+                        ? '<i class="fas fa-eye"></i>' 
+                        : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+
+            // Login form submit
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const enteredPassword = passwordInput.value.trim();
+
+                    if (enteredPassword === ADMIN_PASSWORD) {
+                        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Unlocking...</span>';
+                        loginBtn.disabled = true;
+                        loginError.classList.remove('show');
+
+                        setTimeout(() => {
+                            sessionStorage.setItem(AUTH_KEY, 'true');
+                            showAdminPanel();
+                        }, 800);
+                    } else {
+                        loginError.classList.add('show');
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                        setTimeout(() => {
+                            loginError.classList.remove('show');
+                        }, 2500);
+                    }
+                });
+            }
+
+            // Logout
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (!confirm('Are you sure you want to logout?')) return;
+                    sessionStorage.removeItem(AUTH_KEY);
+                    if (refreshInterval) clearInterval(refreshInterval);
+                    location.reload();
+                });
+            }
+
+            function showAdminPanel() {
+                loginScreen.classList.add('hide');
+                adminPanel.classList.add('show');
+                
+                setTimeout(() => {
+                    fetchClasses(true);
+                    startAutoRefresh();
+                    setDefaultDateTime();
+                    showToast('🙏 Radhe Radhe! Welcome Admin Ji', 'success');
+                }, 100);
+            }
+
+            // ===================================================================
+            // FETCH CLASSES FROM GOOGLE SHEETS
+            // ===================================================================
+            async function fetchClasses(silent = false) {
+                try {
+                    const response = await fetch(API_URL + '?t=' + Date.now());
+                    const data = await response.json();
+
+                    if (data.error) {
+                        console.error('API Error:', data.error);
+                        if (!silent) showToast('❌ ' + data.error, 'error');
+                        return;
+                    }
+
+                    const newClasses = data.classes || [];
+                    const hasChanged = JSON.stringify(newClasses) !== JSON.stringify(classes);
+                    
+                    if (hasChanged || classes.length === 0) {
+                        classes = newClasses;
+                        renderClasses();
+                        updateStats();
+                        if (!silent && hasChanged && classes.length > 0) {
+                            showToast('✅ Classes updated', 'success');
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    if (!silent) showToast('❌ Failed to load classes', 'error');
+                }
+            }
+
+            // ===================================================================
+            // ADD CLASS (POST to Google Sheets)
+            // ===================================================================
+            const classForm = document.getElementById('classForm');
+            if (classForm) {
+                classForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    const newClassData = {
+                        password: ADMIN_PASSWORD,
+                        title: document.getElementById('classTitle').value.trim(),
+                        subject: document.getElementById('classSubject').value,
+                        date: document.getElementById('classDate').value,
+                        time: document.getElementById('classTime').value,
+                        duration: document.getElementById('classDuration').value.trim(),
+                        platform: document.getElementById('classPlatform').value,
+                        link: document.getElementById('classLink').value.trim(),
+                        topic: document.getElementById('classTopic').value.trim()
+                    };
+
+                    if (!newClassData.title || !newClassData.link) {
+                        showToast('⚠️ Please fill required fields', 'error');
+                        return;
+                    }
+
+                    const submitBtn = classForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                    try {
+                        await fetch(API_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'text/plain'
+                            },
+                            body: JSON.stringify(newClassData)
+                        });
+
+                        setTimeout(async () => {
+                            await fetchClasses(true);
+                            classForm.reset();
+                            setDefaultDateTime();
+                            showToast('✅ Class added successfully!', 'success');
+                            
+                            setTimeout(() => {
+                                document.querySelector('.classes-grid').scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'start' 
+                                });
+                            }, 400);
+                        }, 2000);
+
+                    } catch (error) {
+                        console.error('Add error:', error);
+                        showToast('❌ Failed to add class. Try again.', 'error');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
+                });
+            }
+
+            // Clear form
+            const clearFormBtn = document.getElementById('clearFormBtn');
+            if (clearFormBtn) {
+                clearFormBtn.addEventListener('click', function() {
+                    classForm.reset();
+                    setDefaultDateTime();
+                    showToast('🧹 Form cleared', 'info');
+                });
+            }
+
+            // ===================================================================
+            // DELETE CLASS
+            // ===================================================================
+            window.deleteClass = async function(classId) {
+                if (!confirm('Are you sure you want to delete this class?')) return;
+
+                try {
+                    await fetch(API_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        },
+                        body: JSON.stringify({
+                            _method: 'DELETE',
+                            password: ADMIN_PASSWORD,
+                            id: classId
+                        })
+                    });
+
+                    setTimeout(async () => {
+                        await fetchClasses(true);
+                        showToast('🗑️ Class deleted successfully', 'info');
+                    }, 2000);
+
+                } catch (error) {
+                    console.error('Delete error:', error);
+                    showToast('❌ Failed to delete', 'error');
+                }
+            };
+
+            // ===================================================================
+            // SEND TO WHATSAPP (Individual)
+            // ===================================================================
+            window.sendToWhatsApp = function(classId) {
+                const cls = classes.find(c => String(c.id) === String(classId));
+                if (!cls) return;
+
+                const message = buildClassMessage(cls);
+                const url = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+                showToast('📤 Opening WhatsApp...', 'info');
+            };
+
+            function buildClassMessage(cls) {
+                const status = getClassStatus(cls);
+                let emoji = '📅';
+                if (status === 'live') emoji = '🔴';
+                else if (status === 'completed') emoji = '✅';
+
+                let msg = `${emoji} *CodeShalaByKMFL — Class Update*\n\n`;
+                msg += `📖 *${cls.title}*\n`;
+                msg += `📚 Subject: ${cls.subject}\n`;
+                msg += `📅 Date: ${formatDate(cls.date)}\n`;
+                msg += `⏰ Time: ${formatTime(cls.time)}`;
+                if (cls.duration) msg += ` (${cls.duration})`;
+                msg += `\n🎥 Platform: ${cls.platform}\n`;
+                if (cls.topic) msg += `\n📝 *Topic:*\n${cls.topic}\n`;
+                msg += `\n🔗 *Join Link:*\n${cls.link}\n\n`;
+                msg += `⏳ Please join on time!\n`;
+                msg += `💡 Any doubt? Reply here.\n\n`;
+                msg += `— *Team CodeShalaByKMFL* 🚀`;
+
+                return msg;
+            }
+
+            // ===================================================================
+            // COPY LINK
+            // ===================================================================
+            window.copyLink = function(classId) {
+                const cls = classes.find(c => String(c.id) === String(classId));
+                if (!cls) return;
+
+                navigator.clipboard.writeText(cls.link).then(() => {
+                    showToast('📋 Link copied to clipboard!', 'success');
+                }).catch(() => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = cls.link;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    showToast('📋 Link copied!', 'success');
+                });
+            };
+
+            // ===================================================================
+            // BROADCAST ALL
+            // ===================================================================
+            const broadcastAllBtn = document.getElementById('broadcastAllBtn');
+            if (broadcastAllBtn) {
+                broadcastAllBtn.addEventListener('click', function() {
+                    const upcomingClasses = classes.filter(c => {
+                        const status = getClassStatus(c);
+                        return status === 'upcoming' || status === 'live';
+                    });
+
+                    if (upcomingClasses.length === 0) {
+                        showToast('⚠️ No upcoming classes to broadcast', 'error');
+                        return;
+                    }
+
+                    upcomingClasses.sort((a, b) => {
+                        const dateA = new Date(`${a.date}T${a.time}`);
+                        const dateB = new Date(`${b.date}T${b.time}`);
+                        return dateA - dateB;
+                    });
+
+                    let msg = `🎓 *CodeShalaByKMFL — Upcoming Classes*\n\n`;
+                    msg += `Radhe Radhe Students! 🙏\n\n`;
+                    msg += `Here are your upcoming classes:\n\n`;
+
+                    upcomingClasses.forEach((cls, i) => {
+                        const status = getClassStatus(cls);
+                        const statusEmoji = status === 'live' ? '🔴 LIVE' : '📅';
+                        msg += `${statusEmoji} *${i + 1}. ${cls.title}*\n`;
+                        msg += `   📚 ${cls.subject}\n`;
+                        msg += `   📅 ${formatDate(cls.date)} at ${formatTime(cls.time)}\n`;
+                        msg += `   🎥 ${cls.platform}\n`;
+                        msg += `   🔗 ${cls.link}\n\n`;
+                    });
+
+                    msg += `⏳ *Join on time!*\n`;
+                    msg += `💡 Any doubts? Just reply here.\n\n`;
+                    msg += `— *Team CodeShalaByKMFL* 🚀`;
+
+                    document.getElementById('broadcastMessage').value = msg;
+                    document.getElementById('broadcastModal').classList.add('show');
+
+                    const url = `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+                    document.getElementById('modalSendBtn').href = url;
+                });
+            }
+
+            // Modal close
+            const modalCancelBtn = document.getElementById('modalCancelBtn');
+            const broadcastModal = document.getElementById('broadcastModal');
+            if (modalCancelBtn) {
+                modalCancelBtn.addEventListener('click', function() {
+                    broadcastModal.classList.remove('show');
+                });
+            }
+
+            if (broadcastModal) {
+                broadcastModal.addEventListener('click', function(e) {
+                    if (e.target === this) this.classList.remove('show');
+                });
+            }
+
+            const modalSendBtn = document.getElementById('modalSendBtn');
+            if (modalSendBtn) {
+                modalSendBtn.addEventListener('click', function() {
+                    broadcastModal.classList.remove('show');
+                    showToast('📤 Opening WhatsApp Broadcast...', 'info');
+                });
+            }
+
+            // ===================================================================
+            // FILTERS
+            // ===================================================================
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderClasses();
+                });
+            });
+
+            // ===================================================================
+            // RENDER CLASSES
+            // ===================================================================
+            function renderClasses() {
+                const grid = document.getElementById('classesGrid');
+                if (!grid) return;
+
+                let filtered = classes;
+                if (currentFilter === 'upcoming') {
+                    filtered = classes.filter(c => getClassStatus(c) === 'upcoming');
+                } else if (currentFilter === 'live') {
+                    filtered = classes.filter(c => getClassStatus(c) === 'live');
+                } else if (currentFilter === 'completed') {
+                    filtered = classes.filter(c => getClassStatus(c) === 'completed');
+                }
+
+                filtered.sort((a, b) => {
+                    const statusA = getClassStatus(a);
+                    const statusB = getClassStatus(b);
+                    const priority = { live: 0, upcoming: 1, completed: 2 };
+                    if (priority[statusA] !== priority[statusB]) {
+                        return priority[statusA] - priority[statusB];
+                    }
+                    const dateA = new Date(`${a.date}T${a.time}`);
+                    const dateB = new Date(`${b.date}T${b.time}`);
+                    return statusA === 'completed' ? dateB - dateA : dateA - dateB;
+                });
+
+                document.getElementById('classCount').textContent = filtered.length;
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon"><i class="fas fa-inbox"></i></div>
+                            <h3>No Classes Yet</h3>
+                            <p>Add your first class using the form above! 🚀</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = filtered.map(cls => {
+                    const status = getClassStatus(cls);
+                    const statusBadge = getStatusBadgeHTML(status);
+                    const statusClass = `status-${status}`;
+
+                    return `
+                        <div class="class-card ${statusClass}">
+                            <div class="class-header">
+                                <div class="class-title-area">
+                                    <div class="class-title">${escapeHtml(cls.title)}</div>
+                                    <span class="class-subject-chip">
+                                        <i class="fas fa-tag"></i> ${escapeHtml(cls.subject)}
+                                    </span>
+                                </div>
+                                ${statusBadge}
+                            </div>
+
+                            <div class="class-info-grid">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${formatDate(cls.date)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>${formatTime(cls.time)}${cls.duration ? ' • ' + escapeHtml(cls.duration) : ''}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-video"></i>
+                                    <span>${escapeHtml(cls.platform)}</span>
+                                </div>
+                                <div class="info-item">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span>ID: ${escapeHtml(cls.id)}</span>
+                                </div>
+                            </div>
+
+                            ${cls.topic ? `<div class="class-topic"><strong>📝 Topic:</strong> ${escapeHtml(cls.topic)}</div>` : ''}
+
+                            <div class="class-link" title="${escapeHtml(cls.link)}">
+                                <i class="fas fa-link"></i>
+                                <span>${escapeHtml(cls.link)}</span>
+                            </div>
+
+                            <div class="class-actions">
+                                <button class="btn btn-green btn-sm" onclick="sendToWhatsApp('${cls.id}')">
+                                    <i class="fab fa-whatsapp"></i> Send
+                                </button>
+                                <button class="btn btn-ghost btn-sm" onclick="copyLink('${cls.id}')">
+                                    <i class="fas fa-copy"></i> Copy Link
+                                </button>
+                                <button class="btn btn-danger btn-sm btn-full" onclick="deleteClass('${cls.id}')">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===================================================================
+            // HELPERS
+            // ===================================================================
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr + 'T00:00:00');
+                    const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
+                    return date.toLocaleDateString('en-IN', options);
+                } catch (e) { return dateStr; }
+            }
+
+            function formatTime(timeStr) {
+                if (!timeStr) return '';
+                try {
+                    const [hours, minutes] = timeStr.split(':');
+                    const h = parseInt(hours);
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    const h12 = h % 12 || 12;
+                    return `${h12}:${minutes} ${ampm}`;
+                } catch (e) { return timeStr; }
+            }
+
+            function getClassStatus(cls) {
+                if (!cls.date || !cls.time) return 'upcoming';
+                try {
+                    const classDateTime = new Date(`${cls.date}T${cls.time}`);
+                    const now = new Date();
+                    const diffHours = (classDateTime - now) / (1000 * 60 * 60);
+
+                    if (diffHours < -1) return 'completed';
+                    if (diffHours >= -1 && diffHours <= 1) return 'live';
+                    return 'upcoming';
+                } catch (e) { return 'upcoming'; }
+            }
+
+            function getStatusBadgeHTML(status) {
+                const badges = {
+                    'upcoming': '<span class="status-badge upcoming"><i class="fas fa-clock"></i> Upcoming</span>',
+                    'live': '<span class="status-badge live">LIVE NOW</span>',
+                    'completed': '<span class="status-badge completed"><i class="fas fa-check"></i> Completed</span>'
+                };
+                return badges[status] || badges.upcoming;
+            }
+
+            function updateStats() {
+                const total = classes.length;
+                const completed = classes.filter(c => getClassStatus(c) === 'completed').length;
+                const upcoming = classes.filter(c => getClassStatus(c) === 'upcoming').length;
+                const live = classes.filter(c => getClassStatus(c) === 'live').length;
+
+                animateValue('statTotal', total);
+                animateValue('statCompleted', completed);
+                animateValue('statUpcoming', upcoming);
+                animateValue('statLive', live);
+            }
+
+            function animateValue(id, target) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const current = parseInt(el.textContent) || 0;
+                if (current === target) return;
+
+                const diff = target - current;
+                const steps = 20;
+                const step = diff / steps;
+                let i = 0;
+
+                const timer = setInterval(() => {
+                    i++;
+                    el.textContent = Math.round(current + step * i);
+                    if (i >= steps) {
+                        el.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, 25);
+            }
+
+            function setDefaultDateTime() {
+                const now = new Date();
+                const dateInput = document.getElementById('classDate');
+                const timeInput = document.getElementById('classTime');
+                if (!dateInput || !timeInput) return;
+
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+                const nextHour = (now.getHours() + 1) % 24;
+                timeInput.value = `${String(nextHour).padStart(2, '0')}:00`;
+            }
+
+            function showToast(msg, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                if (!container) return;
+
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+
+                let icon = 'fa-info-circle';
+                if (type === 'success') icon = 'fa-check-circle';
+                else if (type === 'error') icon = 'fa-exclamation-circle';
+
+                toast.innerHTML = `<i class="fas ${icon}"></i><span>${msg}</span>`;
+
+                container.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 10);
+
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 400);
+                }, 3500);
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function startAutoRefresh() {
+                if (refreshInterval) clearInterval(refreshInterval);
+                refreshInterval = setInterval(() => {
+                    fetchClasses(true);
+                }, 30000);
+            }
+
+        })();
+    </script>
+</body>
+</html>
